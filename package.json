@@ -1,0 +1,18 @@
+{
+  "name": "crownmania-backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node api/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "axios": "^1.7.7",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "mongodb": "^6.0.0",
+    "mongoose": "^8.8.0",
+    "moralis": "^2.27.2",
+    "shopify-api-node": "^3.14.0"
+  }
+}
