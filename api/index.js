@@ -4,7 +4,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const Moralis = require('moralis').default;
 const shopifyRoutes = require('./api/shopify');
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -22,7 +21,6 @@ Moralis.start({
   console.log('Moralis initialized');
 }).catch((error) => {
   console.error('Moralis initialization error:', error);
-  process.exit(1);
 });
 
 app.use('/api/shopify', shopifyRoutes);

@@ -1,6 +1,9 @@
 const Shopify = require('shopify-api-node');
 const express = require('express');
+const app = express();
+app.use(express.json()); // Add this line to parse JSON bodies
 const router = express.Router();
+const shopifyRoutes = require('./api/shopify');
 
 const shopifyConfig = require('../config/shopify');
 
@@ -10,6 +13,7 @@ router.get('/products', async (req, res) => {
     const products = await shopifyConfig.product.list();
     res.status(200).json(products);
   } catch (error) {
+    console.error('Error fetching products:', error);
     res.status(500).json({ error: 'Failed to fetch products' });
   }
 });
