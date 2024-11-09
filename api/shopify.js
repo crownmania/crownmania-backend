@@ -1,35 +1,47 @@
 const Shopify = require('shopify-api-node');
+const express = require('express');
+const router = express.Router();
 
-console.log('Shop Name:', process.env.SHOPIFY_SHOP_NAME);
-console.log('Access Token:', process.env.SHOPIFY_ACCESS_TOKEN);
+const shopifyConfig = require('../config/shopify');
 
-if (!process.env.SHOPIFY_SHOP_NAME) {
-  console.error('Error: SHOPIFY_SHOP_NAME is not defined in the environment variables.');
-  process.exit(1);
-}
-
-if (!process.env.SHOPIFY_ACCESS_TOKEN) {
-  console.error('Error: SHOPIFY_ACCESS_TOKEN is not defined in the environment variables.');
-  process.exit(1);
-}
-
-const shopify = new Shopify({
-  shopName: process.env.SHOPIFY_SHOP_NAME,
-  accessToken: process.env.SHOPIFY_ACCESS_TOKEN,
-  apiVersion: '2021-01' // Adjust as needed
+// Fetch all products
+router.get('/products', async (req, res) => {
+  try {
+    const products = await shopifyConfig.product.list();
+    res.status(200).json(products);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch products' });
+  }
 });
 
-async function getProducts() {
+// Add a new product
+router.post('/products', async (req, res) => {
   try {
-    const products = await shopify.product.list();
-    return products;
+    const newProduct = await shopifyConfig.product.create(req.body);
+    res.status(201).json(newProduct);
   } catch (error) {
-    console.error('Error fetching products:', error);
-    throw error;
+    res.status(500).json({ error: 'Failed to create product' });
   }
-}
+});
 
-module.exports = {
-  getProducts,
-  shopify
-};
+// Update a product
+router.put('/products/:id', async (req, res) => {
+  try {
+    const updatedProduct = await shopifyConfig.product.update(req.params.id, req.body);
+    res.status(200).json(updatedProduct);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to update product' });
+  }
+});
+
+// Delete a product
+router.delete('/products/:id', async (req, res) => {
+  try {
+    await shopifyConfig.product.delete(req.params.id);
+    res.status(200).json({ message: 'Product deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to delete product' });
+  }
+});
+
+module.exports = router;
